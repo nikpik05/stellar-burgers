@@ -1,20 +1,13 @@
+import { FC } from 'react';
+import { ConstructorPageUI } from '@ui-pages';
 import { useSelector } from '../../services/store';
 
-import styles from './constructor-page.module.css';
+export const ConstructorPage: FC = () => {
+  const { isLoading, error } = useSelector((state) => state.ingredients);
 
-import { BurgerIngredients } from '../../components';
-import { BurgerConstructor } from '../../components';
-import { Preloader } from '../../components/ui';
-import { FC } from 'react';
+  if (error) {
+    return <p className='text text_type_main-medium mt-10'>{error}</p>;
+  }
 
-export const ConstructorPage: FC = () => (
-  <main className={styles.containerMain}>
-    <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-      Соберите бургер
-    </h1>
-    <div className={`${styles.main} pl-5 pr-5`}>
-      <BurgerIngredients />
-      <BurgerConstructor />
-    </div>
-  </main>
-);
+  return <ConstructorPageUI isIngredientsLoading={isLoading} />;
+};

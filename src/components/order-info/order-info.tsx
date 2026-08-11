@@ -1,25 +1,38 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { useDispatch, useSelector } from '../../services/store';
+import { useParams } from 'react-router-dom';
+import { fetchOrderByNumber } from '../../services/slices/orderSlice';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  const dispatch = useDispatch();
+  const { number } = useParams();
 
-  const ingredients: TIngredient[] = [];
+  const {
+    orderDetails: orderData,
+    isLoading,
+    error
+  } = useSelector((store) => store.orders);
 
-  /* Готовим данные для отображения */
+  const ingredients: TIngredient[] = useSelector(
+    (store) => store.ingredients.items
+  );
+  const ingredientsError = useSelector((store) => store.ingredients.error);
+  useEffect(() => {
+    if (number) {
+      dispatch(fetchOrderByNumber(Number(number)));
+    }
+  }, [dispatch, number]);
+
   const orderInfo = useMemo(() => {
-    if (!orderData || !ingredients.length) return null;
+    if (
+      !orderData ||
+      orderData.number !== Number(number) ||
+      !ingredients.length
+    )
+      return null;
 
     const date = new Date(orderData.createdAt);
 
@@ -51,15 +64,24 @@ export const OrderInfo: FC = () => {
       0
     );
 
+    const status = orderData.status;
+
     return {
       ...orderData,
       ingredientsInfo,
       date,
-      total
+      total,
+      status
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (error || ingredientsError) {
+    return (
+      <p className='text text_type_main-medium'>{error || ingredientsError}</p>
+    );
+  }
+
+  if (isLoading || !orderInfo) {
     return <Preloader />;
   }
 

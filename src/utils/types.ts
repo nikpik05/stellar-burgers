@@ -1,3 +1,5 @@
+import { Location } from 'react-router-dom';
+
 export type TIngredient = {
   _id: string;
   name: string;
@@ -35,6 +37,11 @@ export type TOrdersData = {
 export type TUser = {
   email: string;
   name: string;
+};
+
+export type TLocationState = {
+  background?: Location;
+  from?: Location;
 };
 
 export type TTabMode = 'bun' | 'sauce' | 'main';
