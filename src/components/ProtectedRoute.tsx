@@ -15,7 +15,6 @@ export const ProtectedRoute: FC<ProtectedRouteProps> = ({
   const location = useLocation();
   const isAuthChecked = useSelector((state) => state.user.isAuthChecked);
   const user = useSelector((state) => state.user.data);
-  // Показываем прелоадер, если проверка не завершена
   if (!isAuthChecked) {
     return <Preloader />;
   }

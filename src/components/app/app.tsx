@@ -12,6 +12,7 @@ import {
 import '../../index.css';
 import styles from './app.module.css';
 import { TLocationState } from '@utils-types';
+import clsx from 'clsx';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import {
@@ -77,7 +78,22 @@ const App = () => {
           element={<ProtectedRoute element={<ProfileOrders />} />}
         />
         <Route path='/feed/:number' element={<OrderInfo />} />
-        <Route path='/ingredients/:id' element={<IngredientDetails />} />
+        <Route
+          path='/ingredients/:id'
+          element={
+            <main className={styles.detailPageWrap}>
+              <h1
+                className={clsx(
+                  styles.detailHeader,
+                  'text text_type_main-large'
+                )}
+              >
+                Детали ингредиента
+              </h1>
+              <IngredientDetails />
+            </main>
+          }
+        />
         <Route
           path='/profile/orders/:number'
           element={<ProtectedRoute element={<OrderInfo />} />}
